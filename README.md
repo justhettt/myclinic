@@ -6,10 +6,6 @@
 
 There are several ways of editing your application.
 
-Live visit the ([https://preview--hospitalhive.lovable.app/](https://preview--hospitalhive.lovable.app/))
-
-
-
 
 This project is built with .
 
