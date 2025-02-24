@@ -142,7 +142,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              My Clinic - Vadodara
+              My Clinic
             </h1>
             <p className="text-lg md:text-xl mb-8 opacity-90">
               Professional Healthcare at Your Fingertips
