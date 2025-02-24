@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Search, MapPin, Calendar, ArrowRight, Phone, Star, IndianRupee } from "lucide-react";
+import { Search, MapPin, Calendar, ArrowRight, Phone, Star, IndianRupee, Pill } from "lucide-react";
 import { toast } from "sonner";
 
 interface Hospital {
@@ -9,42 +8,68 @@ interface Hospital {
   location: string;
   specialties: string[];
   rating: number;
-  price: number; // Consultation fee
-  distance: number; // in km
+  price: number;
+  distance: number;
   image: string;
+  medicines?: boolean;
 }
 
 const featuredHospitals: Hospital[] = [
   {
     id: 1,
-    name: "My Clinic - Alkapuri",
-    location: "Race Course Circle, Vadodara",
+    name: "SSG Hospital",
+    location: "Jail Road, Raopura, Vadodara",
     specialties: ["General Medicine", "Pediatrics", "Orthopedics"],
-    rating: 4.8,
-    price: 500,
-    distance: 2.5,
+    rating: 4.5,
+    price: 100,
+    distance: 1.2,
     image: "https://images.unsplash.com/photo-1587351021355-a479a299d2f9?auto=format&fit=crop&q=80&w=300&h=200",
+    medicines: true,
   },
   {
     id: 2,
-    name: "My Clinic - Karelibaug",
-    location: "Near Karelibaug Bridge, Vadodara",
+    name: "Bhailal Amin General Hospital",
+    location: "Gorwa Road, Vadodara",
     specialties: ["General Surgery", "Gynecology", "Cardiology"],
-    rating: 4.6,
-    price: 450,
-    distance: 4.1,
+    rating: 4.7,
+    price: 500,
+    distance: 3.5,
     image: "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&q=80&w=300&h=200",
+    medicines: true,
   },
   {
     id: 3,
-    name: "My Clinic - Waghodia",
-    location: "Waghodia Road, Vadodara",
-    specialties: ["Dermatology", "ENT", "General Medicine"],
-    rating: 4.7,
-    price: 400,
-    distance: 5.8,
+    name: "Sterling Hospital",
+    location: "Race Course Circle, Vadodara",
+    specialties: ["Cardiology", "Neurology", "Orthopedics"],
+    rating: 4.8,
+    price: 800,
+    distance: 4.2,
     image: "https://images.unsplash.com/photo-1587351021384-a7893afd4d5f?auto=format&fit=crop&q=80&w=300&h=200",
+    medicines: true,
   },
+  {
+    id: 4,
+    name: "Kiran Hospital",
+    location: "Mangal Pandey Road, Vadodara",
+    specialties: ["General Medicine", "Dermatology", "ENT"],
+    rating: 4.6,
+    price: 600,
+    distance: 2.8,
+    image: "https://images.unsplash.com/photo-1587351021355-a479a299d2f9?auto=format&fit=crop&q=80&w=300&h=200",
+    medicines: true,
+  },
+  {
+    id: 5,
+    name: "Akshar Hospital",
+    location: "Near Nizampura, Vadodara",
+    specialties: ["Pediatrics", "Gynecology", "General Medicine"],
+    rating: 4.4,
+    price: 450,
+    distance: 3.1,
+    image: "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&q=80&w=300&h=200",
+    medicines: true,
+  }
 ];
 
 const specialties = [
@@ -58,6 +83,7 @@ const specialties = [
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [filters, setFilters] = useState({
     rating: 0,
     maxPrice: 1000,
@@ -73,7 +99,8 @@ const Index = () => {
       hospital.distance <= filters.maxDistance &&
       (searchQuery === "" || 
         hospital.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        hospital.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase())))
+        hospital.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()))) &&
+      (selectedSpecialty === "" || hospital.specialties.includes(selectedSpecialty))
     );
   });
 
@@ -90,10 +117,28 @@ const Index = () => {
     toast.success("Appointment booked successfully! We'll send you a confirmation shortly.");
   };
 
+  const handleMedicineOrder = (hospitalId: number) => {
+    toast.success("Redirecting to medicine ordering portal...");
+    // Add medicine ordering logic here
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-primary to-primary/80 text-white py-16">
+    <div className="min-h-screen bg-white">
+      <nav className="bg-white shadow-md">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-green-600 font-bold text-2xl">My Clinic</div>
+            <div className="flex items-center space-x-6">
+              <a href="#" className="text-gray-600 hover:text-green-600">Home</a>
+              <a href="#specialties" className="text-gray-600 hover:text-green-600">Specialties</a>
+              <a href="#hospitals" className="text-gray-600 hover:text-green-600">Hospitals</a>
+              <a href="#emergency" className="text-gray-600 hover:text-green-600">Emergency</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <section className="bg-gradient-to-b from-green-600 to-green-500 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -103,7 +148,6 @@ const Index = () => {
               Professional Healthcare at Your Fingertips
             </p>
             
-            {/* Search & Filters */}
             <div className="bg-white rounded-lg p-4 shadow-lg">
               <div className="flex items-center mb-4">
                 <Search className="w-6 h-6 text-gray-400 mx-2" />
@@ -116,7 +160,6 @@ const Index = () => {
                 />
               </div>
               
-              {/* Filters */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-800">
                 <div>
                   <label className="block text-sm font-medium mb-1">Minimum Rating</label>
@@ -163,7 +206,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Emergency Call Button - Fixed Position */}
       <button
         onClick={handleEmergencyCall}
         className="fixed bottom-6 right-6 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-2 z-50 animate-pulse"
@@ -172,25 +214,28 @@ const Index = () => {
         <span className="font-bold">108</span>
       </button>
 
-      {/* Specialties Section */}
-      <section className="py-16 container mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+      <section id="specialties" className="py-16 container mx-auto px-4">
+        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center text-green-600">
           Our Specialties
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {specialties.map((specialty) => (
             <button
               key={specialty}
-              className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow text-center animate-fade-up"
+              onClick={() => setSelectedSpecialty(specialty === selectedSpecialty ? "" : specialty)}
+              className={`p-4 rounded-lg shadow-sm hover:shadow-md transition-all text-center animate-fade-up ${
+                specialty === selectedSpecialty 
+                ? "bg-green-600 text-white" 
+                : "bg-white text-gray-800 hover:bg-green-50"
+              }`}
             >
-              <span className="font-medium text-gray-800">{specialty}</span>
+              <span className="font-medium">{specialty}</span>
             </button>
           ))}
         </div>
       </section>
 
-      {/* Clinics Section */}
-      <section className="py-16 bg-white">
+      <section id="hospitals" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
             Our Clinics in Vadodara
@@ -266,8 +311,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Emergency Section */}
-      <section className="bg-gray-50 py-16">
+      <section id="emergency" className="bg-white py-16 border-t">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
             Need Emergency Care?
@@ -284,6 +328,50 @@ const Index = () => {
           </button>
         </div>
       </section>
+
+      <footer className="bg-green-800 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">My Clinic</h3>
+              <p className="text-green-100">
+                Professional healthcare services in Vadodara, available 24/7 for your medical needs.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-green-100 hover:text-white">Home</a></li>
+                <li><a href="#specialties" className="text-green-100 hover:text-white">Specialties</a></li>
+                <li><a href="#hospitals" className="text-green-100 hover:text-white">Hospitals</a></li>
+                <li><a href="#emergency" className="text-green-100 hover:text-white">Emergency</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Contact</h4>
+              <ul className="space-y-2">
+                <li className="flex items-center">
+                  <Phone className="w-4 h-4 mr-2" />
+                  <span>Emergency: 108</span>
+                </li>
+                <li>Email: info@myclinic.com</li>
+                <li>Vadodara, Gujarat, India</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Working Hours</h4>
+              <ul className="space-y-2">
+                <li>Monday - Saturday</li>
+                <li>9:00 AM - 8:00 PM</li>
+                <li className="font-semibold">Emergency: 24/7</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-green-700 text-center text-green-100">
+            <p>&copy; 2024 My Clinic. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
